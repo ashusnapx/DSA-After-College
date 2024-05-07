@@ -1,10 +1,9 @@
-import { Navbar } from "@/components";
+import { HeroSection } from '@/components';
 
 export default function Home() {
   return (
     <>
-      {/* <Navbar/> */}
-      
+      <HeroSection />
     </>
   );
 }
