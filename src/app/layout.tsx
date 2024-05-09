@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang='en' suppressHydrationWarning>
+      <html lang='en' suppressHydrationWarning className='antialiased grainy'>
         <head />
         <body>
           <ThemeProvider

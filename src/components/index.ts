@@ -1,5 +1,6 @@
 import Navbar from './Navbar';
-import HeroSection from './HeroSection';
 import RestaurantList from './RestaurantList';
+import RestaurantCard from './RestaurantCard';
+import RestaurantMenu from './RestaurantMenu';
 
-export { Navbar, HeroSection, RestaurantList };
+export { Navbar, RestaurantList, RestaurantCard, RestaurantMenu };

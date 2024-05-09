@@ -1,27 +1,35 @@
-'use client'
+'use client';
 import { useEffect, useState } from 'react';
 import RestaurantCard from './RestaurantCard';
+import { RESTAURANT_LIST_API } from '@/constants/constants';
+import { toast } from 'sonner';
+import { Button, Input } from './ui';
+import Image from 'next/image';
 
 const RestaurantList = () => {
-  const [listOfRestaurants, setListOfRestaurants] = useState([]);
+  const [initialListOfRestaurants, setInitialListOfRestaurants] = useState<
+    any[]
+  >([]);
+  const [listOfRestaurants, setListOfRestaurants] = useState<any[]>([]);
 
   const fetchData = async () => {
     try {
-      const response = await fetch(
-        'https://www.swiggy.com/dapi/restaurants/list/v5?lat=19.0759837&lng=72.8776559&page_type=DESKTOP_WEB_LISTING'
-      );
+      const response = await fetch(RESTAURANT_LIST_API);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
       const data = await response.json();
       const restaurants =
         data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
-          ?.restaurants;
-
-      if (restaurants) {
-        setListOfRestaurants(restaurants);
-      } else {
+          ?.restaurants || [];
+      if (restaurants.length === 0) {
         throw new Error('No restaurants found');
       }
+      setListOfRestaurants(restaurants);
+      setInitialListOfRestaurants(restaurants);
     } catch (error) {
       console.error('Error fetching restaurant data:', error);
+      toast.error('Failed to fetch restaurant data');
     }
   };
 
@@ -29,11 +37,99 @@ const RestaurantList = () => {
     fetchData();
   }, []);
 
+  const filterTopRatedRestaurants = () => {
+    const filteredRestaurants = initialListOfRestaurants.filter(
+      (res: any) => res?.info?.avgRating > 4
+    );
+    const sortedRestaurants = filteredRestaurants.sort(
+      (a: any, b: any) => b.info.avgRating - a.info.avgRating
+    );
+    setListOfRestaurants(sortedRestaurants);
+    toast.success('Top rated restaurants filtered.');
+  };
+
+  const filterFastestDeliveryRestaurants = () => {
+    const sortedRestaurantsBasedOnDeliveryTime = [
+      ...initialListOfRestaurants,
+    ].sort(
+      (a: any, b: any) =>
+        a?.info?.sla?.deliveryTime - b?.info?.sla?.deliveryTime
+    );
+    setListOfRestaurants(sortedRestaurantsBasedOnDeliveryTime);
+    toast.success('Fastest delivery restaurants filtered.');
+  };
+
+  const resetFilter = () => {
+    setListOfRestaurants(initialListOfRestaurants);
+    toast.success('Filter reset.');
+  };
+
+  const searchRestaurants = (query: string) => {
+    const normalizedQuery = query.trim().toLowerCase();
+    const filteredRestaurants = initialListOfRestaurants.filter(
+      (restaurant: any) => {
+        return (
+          restaurant.info.name.toLowerCase().includes(normalizedQuery) ||
+          restaurant.info.locality.toLowerCase().includes(normalizedQuery) ||
+          restaurant.info.areaName.toLowerCase().includes(normalizedQuery) ||
+          restaurant.info.cuisines.some((cuisine: string) =>
+            cuisine.toLowerCase().includes(normalizedQuery)
+          )
+        );
+      }
+    );
+    setListOfRestaurants(filteredRestaurants);
+  };
+
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const query = event.target.value;
+    if (query === '') {
+      resetFilter();
+    } else {
+      searchRestaurants(query);
+    }
+  };
+
   return (
-    <div className='grid grid-cols-4 m-5'>
-      {listOfRestaurants.map((restaurant) => (
-        <RestaurantCard key={restaurant?.info?.id} restaurant={restaurant} />
-      ))}
+    <div className='mx-5'>
+      <div className='flex flex-col items-center md:flex-row space-x-3'>
+        <Input
+          placeholder='Search for restaurants using name, area, locality or cuisine'
+          onChange={handleSearchInputChange}
+        />
+        <Button onClick={filterTopRatedRestaurants}>
+          Top rated restaurants
+        </Button>
+        <Button onClick={filterFastestDeliveryRestaurants}>
+          Faster delivery restaurants
+        </Button>
+        <Button onClick={resetFilter}>Clear Filter</Button>{' '}
+      </div>
+      {listOfRestaurants.length === 0 ? (
+        <div className='flex flex-col items-center justify-center mt-4'>
+          <Image
+            src='/no-food.gif'
+            width={200}
+            height={500}
+            alt='No results found'
+            className='w-100 h-100 object-contain mb-2'
+          />
+          <p className='text-gray-600 dark:text-gray-400'>
+            No restaurants found for the searched query.
+          </p>
+        </div>
+      ) : (
+        <div className='grid grid-cols-4 m-5 gap-3'>
+          {listOfRestaurants.map((restaurant: any) => (
+            <RestaurantCard
+              key={restaurant?.info?.id}
+              restaurant={restaurant}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

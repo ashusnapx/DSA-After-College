@@ -19,16 +19,16 @@ const Navbar = () => {
       toast.success('User logged in successfully 🎉');
     } else {
       setIsLoggedIn(false);
-      toast.success('User logged out successfully 🎉');
+      toast.success('Hope we will meet soon. Bye 👋');
     }
   }, [user]);
 
   return (
-    <div className='flex flex-row items-center justify-between border-b-2 border-dotted m-4'>
+    <div className='flex flex-row items-center justify-between border-b m-4'>
       {/* logo + brand name */}
       <Link href='/' className='flex flex-row items-center justify-center mb-3'>
         <Image src='/logo.png' width={55} height={55} alt='logo-image' />
-        <h1 className='text-2xl mx-2 font-semibold'>Fooder</h1>
+        <h1 className='text-xl mx-2 font-semibold'>Fooder</h1>
       </Link>
 
       {/* nav links + routes */}
@@ -42,7 +42,7 @@ const Navbar = () => {
 
       {/* light/dark mode toggle button */}
       <div className='flex flex-row items-center space-x-4'>
-        <Button className=''>
+        <Button className='italic'>
           <Link href='/cart'>
             <h1>Cart</h1>
           </Link>
@@ -50,9 +50,9 @@ const Navbar = () => {
         {/* authentication */}
         <div>
           {isLoggedIn ? (
-            <div className='flex items-center space-x-2'>
+            <div className='flex items-center space-x-2 text-xl'>
               <UserButton />
-              <h1>{user?.fullName}</h1>
+              <h1 className='tracking-tighter'>{user?.fullName}</h1>
             </div>
           ) : (
             <div className='space-x-4'>

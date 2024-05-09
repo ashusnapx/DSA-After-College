@@ -1,9 +1,9 @@
-import { HeroSection } from '@/components';
+import { RestaurantList } from '@/components';
 
 export default function Home() {
   return (
     <>
-      <HeroSection />
+      <RestaurantList />
     </>
   );
 }
