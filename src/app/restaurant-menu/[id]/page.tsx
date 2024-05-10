@@ -1,4 +1,5 @@
 'use client';
+import { Card } from '@/components';
 import { CDN_URL_UPDATED, RESTAURANT_MENU_API } from '@/constants/constants';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
@@ -23,196 +24,113 @@ const Page = ({ params }: { params: any }) => {
     }
   };
 
+  if (!menuItems) {
+    return (
+      <div>
+        <Image
+          src='/logo.png'
+          width={55}
+          height={55}
+          alt='logo-image'
+          className='h-full w-full object-cover animate-pulse'
+        />
+      </div>
+    );
+  }
+
+  const cardData = [
+    {
+      title: 'Name',
+      content: menuItems.data.cards[2].card.card.info.name,
+    },
+    {
+      title: 'Address',
+      content: menuItems.data.cards[2].card.card.info.labels[1].message,
+    },
+    {
+      title: 'Opening Status',
+      content: menuItems.data.cards[2].card.card.info.availability.opened
+        ? 'Open'
+        : 'Closed',
+    },
+    {
+      title: 'Average Rating',
+      content: menuItems.data.cards[2].card.card.info.avgRatingString,
+    },
+    {
+      title: 'Cost for Two',
+      content: menuItems.data.cards[2].card.card.info.costForTwoMessage,
+    },
+    {
+      title: 'Cuisines',
+      content: menuItems.data.cards[2].card.card.info.cuisines.join(', '),
+    },
+    {
+      title: 'Delivery Fee',
+      content: `${menuItems.data.cards[2].card.card.info.feeDetails.title} - ${menuItems.data.cards[2].card.card.info.feeDetails.message}`,
+    },
+    {
+      title: 'Delivery Time',
+      content: `${menuItems.data.cards[2].card.card.info.sla.deliveryTime} Minutes`,
+    },
+    {
+      title: 'Range of Delivery Time',
+      content: menuItems.data.cards[2].card.card.info.sla.slaString,
+    },
+    {
+      title: 'Total Ratings',
+      content: menuItems.data.cards[2].card.card.info.totalRatingsString,
+    },
+  ];
+
   return (
     <div>
+      {/* header part */}
       <div>
-        {menuItems !== null ? (
-          <div className='grid grid-cols-3'>
-            <div className='col-span-1 mx-4 flex flex-col items-center justify-center bg-black/30 dark:bg-white p-4 rounded-2xl text-white dark:text-black light:bg-black'>
-              <div className='flex items-center'>
+        <div className='grid grid-cols-3 gap-6'>
+          {/* Restaurant Information */}
+          <div className='col-span-1 mx-4 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 p-6 rounded-lg text-gray-900 dark:text-gray-100'>
+            <div className='flex items-center mb-4'>
+              {menuItems?.data?.cards[2]?.card?.card?.info?.logo && (
                 <Image
-                  src={`${CDN_URL_UPDATED}/${menuItems.data.cards[2].card.card.info.logo}`}
+                  src={`${CDN_URL_UPDATED}/${menuItems?.data?.cards[2]?.card?.card?.info?.logo}`}
                   alt='restaurant-logo'
                   width={100}
                   height={100}
                   className='rounded-full'
                 />
-                <h1 className='text-4xl font-bold tracking-tighest'>
-                  {menuItems.data.cards[2].card.card.info.name}
-                </h1>
-              </div>
-              <Image
-                src={`${CDN_URL_UPDATED}/${menuItems.data.cards[2].card.card.info.cloudinaryImageId}`}
-                alt='restaurant-logo'
-                width={900}
-                height={900}
-                className='w-full h-full object-cover my-2 rounded-2xl'
-              />
+              )}
+              <h1 className='text-4xl font-bold ml-4 tracking-tight'>
+                {menuItems?.data?.cards[2]?.card?.card?.info?.name}
+              </h1>
             </div>
-
-            <div className='col-span-2 bg-black/30 dark:bg-white text-white dark:text-black rounded-2xl mx-4 grid grid-cols-3 gap-3 px-3 py-2'>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Name</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.name}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Address</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.labels[1].message}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Opening Status</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.availability.opened
-                    ? 'Open'
-                    : 'Closed'}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Average Rating</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.avgRatingString}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Cost for Two</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.costForTwoMessage}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Cuisines</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.cuisines.join(', ')}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Delivery Fee</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.feeDetails.title} -{' '}
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        menuItems.data.cards[2].card.card.info.feeDetails
-                          .message,
-                    }}
-                  />
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Delivery Time</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.sla.deliveryTime}{' '}
-                  Minutes
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>
-                  Range of Delivery Time
-                </h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.sla.slaString}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Total Ratings</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.totalRatingsString}
-                </p>
-              </div>
-            </div>
-
-            {/* <div className='col-span-2 mx-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 dark:text-black'>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Name</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.name}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Address</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.labels[1].message}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Opening Status</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.availability.opened
-                    ? 'Open'
-                    : 'Closed'}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Average Rating</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.avgRatingString}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Cost for Two</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.costForTwoMessage}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Cuisines</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.cuisines.join(', ')}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Delivery Fee</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.feeDetails.title} -{' '}
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        menuItems.data.cards[2].card.card.info.feeDetails
-                          .message,
-                    }}
-                  />
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Delivery Time</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.sla.deliveryTime}{' '}
-                  Minutes
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>
-                  Range of Delivery Time
-                </h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.sla.slaString}
-                </p>
-              </div>
-              <div className='bg-white shadow-md rounded-md p-6'>
-                <h2 className='text-lg font-semibold mb-2'>Total Ratings</h2>
-                <p className='text-gray-600'>
-                  {menuItems.data.cards[2].card.card.info.totalRatingsString}
-                </p>
-              </div>
-            </div> */}
-          </div>
-        ) : (
-          <>
             <Image
-              src='/logo.png'
-              width={55}
-              height={55}
-              alt='logo-image'
-              className='h-full w-full object-cover animate-pulse'
+              src={`${CDN_URL_UPDATED}/${menuItems?.data?.cards[2]?.card?.card?.info?.cloudinaryImageId}`}
+              alt='restaurant-image'
+              width={600}
+              height={400}
+              className='w-full h-full object-cover rounded-lg shadow-md'
             />
-          </>
-        )}
+          </div>
+
+          {/* Menu Cards */}
+          <div className='col-span-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 py-2'>
+            {cardData.map((card, index) => (
+              <div
+                key={index}
+                className='bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md p-6'
+              >
+                <h2 className='text-lg font-semibold mb-2'>{card.title}</h2>
+                <p className='text-gray-700 dark:text-gray-300'>
+                  {card.content}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
+      {/* actual menu cards */}
       <div></div>
     </div>
   );
