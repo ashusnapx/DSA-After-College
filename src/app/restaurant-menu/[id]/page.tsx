@@ -87,7 +87,7 @@ const Page = ({ params }: { params: any }) => {
     <div>
       {/* header part */}
       <div>
-        <div className='grid grid-cols-3 gap-6'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
           {/* Restaurant Information */}
           <div className='col-span-1 mx-4 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 p-6 rounded-lg text-gray-900 dark:text-gray-100'>
             <div className='flex items-center mb-4'>
@@ -97,10 +97,9 @@ const Page = ({ params }: { params: any }) => {
                   alt='restaurant-logo'
                   width={100}
                   height={100}
-                  className='rounded-full'
                 />
               )}
-              <h1 className='text-4xl font-bold ml-4 tracking-tight'>
+              <h1 className='text-2xl md:text-4xl font-bold ml-4 tracking-tight'>
                 {menuItems?.data?.cards[2]?.card?.card?.info?.name}
               </h1>
             </div>
@@ -118,7 +117,7 @@ const Page = ({ params }: { params: any }) => {
             {cardData.map((card, index) => (
               <div
                 key={index}
-                className='bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md p-6'
+                className='bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg'
               >
                 <h2 className='text-lg font-semibold mb-2'>{card.title}</h2>
                 <p className='text-gray-700 dark:text-gray-300'>
@@ -129,9 +128,34 @@ const Page = ({ params }: { params: any }) => {
           </div>
         </div>
       </div>
-
-      {/* actual menu cards */}
-      <div></div>
+      <div>
+        {menuItems.data.cards[5]?.groupedCard.cardGroupMap.REGULAR.cards[1].card.card.itemCards.map(
+          (itemCard: any, index: number) => (
+            <div key={index}>
+              <h1>
+                <Image
+                  src={`${CDN_URL_UPDATED}/${itemCard.card.info.imageId}`}
+                  alt='food-image'
+                  height={100}
+                  width={100}
+                />
+              </h1>
+              <h1>{itemCard.card.info.name}</h1>
+              <h1>{itemCard.card.info.description}</h1>
+              <h1>{itemCard.card.info.isVeg ? 'VEG' : 'NON-VEG'}</h1>
+              <h1>
+                Rating: {itemCard.card.info.ratings.aggregatedRating.rating}{' '}
+                Number of people rated:{' '}
+                {itemCard.card.info.ratings.aggregatedRating.ratingCount}
+              </h1>
+              <h1>{itemCard.card.info.category}</h1>
+              <h1>{itemCard.card.info.defaultPrice / 100} Rupees</h1>
+              <h1>Offers: {itemCard.card.info.offerTags[0].title}</h1>
+              <h1>Coupon: {itemCard.card.info.offerTags[0].subTitle}</h1>
+            </div>
+          )
+        )}
+      </div>
     </div>
   );
 };

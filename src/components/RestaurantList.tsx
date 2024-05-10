@@ -94,18 +94,29 @@ const RestaurantList = () => {
 
   return (
     <div className='mx-5'>
-      <div className='flex flex-col items-center md:flex-row space-x-3'>
+      <div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
         <Input
           placeholder='Search for restaurants using name, area, locality or cuisine'
           onChange={handleSearchInputChange}
         />
-        <Button onClick={filterTopRatedRestaurants}>
-          Top rated restaurants
-        </Button>
-        <Button onClick={filterFastestDeliveryRestaurants}>
-          Faster delivery restaurants
-        </Button>
-        <Button onClick={resetFilter}>Clear Filter</Button>{' '}
+        <div className='hidden md:flex items-center gap-4'>
+          <Button onClick={filterTopRatedRestaurants}>
+            Top rated restaurants
+          </Button>
+          <Button onClick={filterFastestDeliveryRestaurants}>
+            Faster delivery restaurants
+          </Button>
+          <Button onClick={resetFilter}>Clear Filter</Button>{' '}
+        </div>
+        <div className='md:hidden flex justify-between flex-wrap gap-3'>
+          <Button onClick={filterTopRatedRestaurants}>
+            Top rated restaurants
+          </Button>
+          <Button onClick={filterFastestDeliveryRestaurants}>
+            Faster delivery restaurants
+          </Button>
+          <Button onClick={resetFilter}>Clear Filter</Button>{' '}
+        </div>
       </div>
       {listOfRestaurants.length === 0 ? (
         <div className='flex flex-col items-center justify-center mt-4'>
@@ -121,7 +132,7 @@ const RestaurantList = () => {
           </p>
         </div>
       ) : (
-        <div className='grid grid-cols-4 m-5 gap-3'>
+        <div className='grid grid-cols-1 md:grid-cols-4 my-3 gap-3'>
           {listOfRestaurants.map((restaurant: any) => (
             <RestaurantCard
               key={restaurant?.info?.id}

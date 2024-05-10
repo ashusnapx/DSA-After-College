@@ -35,7 +35,9 @@ const RestaurantCard = ({ restaurant }: { restaurant: Restaurant }) => {
           />
         </div>
         <div className='p-4'>
-          <h1 className='text-xl font-semibold mb-2'>{restaurant.info.name}</h1>
+          <h1 className='text-2xl font-semibold mb-2 border-b-2 border-dashed tracking-tighter'>
+            {restaurant.info.name} &rarr;
+          </h1>
           <p className='mb-1'>
             <span className='font-semibold italic'> Address : </span>
             {restaurant.info.locality}, {restaurant.info.areaName}

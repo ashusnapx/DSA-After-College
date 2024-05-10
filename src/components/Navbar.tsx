@@ -8,9 +8,11 @@ import { navLinks } from '@/constants/constants';
 import { Button } from './ui/button';
 import { UserButton, useUser } from '@clerk/nextjs';
 import { toast } from 'sonner';
+import { MenuSquareIcon, XSquareIcon } from 'lucide-react';
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isHamburgerClicked, setIsHamburgerClicked] = useState(false);
   const { user } = useUser();
   console.log(user);
   useEffect(() => {
@@ -23,32 +25,49 @@ const Navbar = () => {
     }
   }, [user]);
 
-  return (
-    <div className='flex flex-row items-center justify-between border-b m-4'>
-      {/* logo + brand name */}
-      <Link href='/' className='flex flex-row items-center justify-center mb-3'>
-        <Image src='/logo.png' width={55} height={55} alt='logo-image' />
-        <h1 className='text-xl mx-2 font-semibold'>Fooder</h1>
-      </Link>
+  const handleHamburger = () => {
+    setIsHamburgerClicked(true);
+  };
+  const handleHamburgerClose = () => {
+    setIsHamburgerClicked(false);
+  };
 
-      {/* nav links + routes */}
-      <div className='space-x-9 text-xl font-extralight'>
+  return (
+    <nav className='p-3 flex flex-row items-center justify-between'>
+      {/* logo + brand name */}{' '}
+      <Link
+        href='/'
+        className='flex flex-row items-center justify-center mb-3 gap-2'
+      >
+        <Image
+          src='/logo.png'
+          className='object-cover max-w-16 max-h-16'
+          width={100}
+          height={100}
+          alt='logo-image'
+        />
+        <div>
+          <h1 className='text-4xl font-semibold tracking-tighter'>
+            Fooder<sup>®</sup>
+          </h1>{' '}
+          <h1 className='text-gray-600'>By Ashutosh Kumar</h1>
+        </div>
+      </Link>
+      {/* nav menu items */}
+      <div className='hidden md:flex gap-12 text-xl'>
         {navLinks.map((link, index) => (
-          <Link key={index} href={link.linkRoute}>
+          <Link
+            key={index}
+            href={link.linkRoute}
+            className='font-display font-medium hover:text-red-700'
+          >
             {link.linkName}
           </Link>
         ))}
       </div>
-
-      {/* light/dark mode toggle button */}
-      <div className='flex flex-row items-center space-x-4'>
-        <Button className='italic'>
-          <Link href='/cart'>
-            <h1>Cart</h1>
-          </Link>
-        </Button>
-        {/* authentication */}
-        <div>
+      {/* auth and light/dark mode toggler */}
+      <div className='hidden md:block'>
+        <div className='flex items-center gap-6'>
           {isLoggedIn ? (
             <div className='flex items-center space-x-2 text-xl'>
               <UserButton />
@@ -64,10 +83,84 @@ const Navbar = () => {
               </Button>
             </div>
           )}
+
+          <ModeToggle />
         </div>
-        <ModeToggle />
       </div>
-    </div>
+      {/* hamburger icon */}
+      <Button
+        variant='link'
+        className='p-3 md:hidden'
+        onClick={handleHamburger}
+      >
+        <MenuSquareIcon className='text-gray-600' />
+      </Button>
+      {isHamburgerClicked ? (
+        <div className='fixed z-10 md:hidden bg-white inset-0 dark:bg-black dark:text-white h-fit transition ease-in-out duration-300'>
+          <div className='flex flex-row items-center justify-between'>
+            <Link
+              href='/'
+              className='flex flex-row items-center justify-center gap-2 p-3'
+            >
+              <Image
+                src='/logo.png'
+                className='object-cover max-w-16 max-h-16'
+                width={100}
+                height={100}
+                alt='logo-image'
+              />
+              <div>
+                <h1 className='text-4xl font-semibold tracking-tighter'>
+                  Fooder<sup>®</sup>
+                </h1>{' '}
+                <h1 className='text-gray-600'>By Ashutosh Kumar</h1>
+              </div>
+            </Link>
+
+            <Button
+              onClick={handleHamburgerClose}
+              className='bg-white dark:bg-black  hover:bg-gray-300 p-4'
+            >
+              <XSquareIcon className='text-gray-600 dark:text-white' />
+            </Button>
+          </div>
+
+          <div className='flex flex-col gap-2 p-3'>
+            {navLinks.map((link, index) => (
+              <Link
+                key={index}
+                href={link.linkRoute}
+                className='font-display font-medium text-black dark:text-white p-3 hover:bg-gray-100 dark:hover:bg-red-500 rounded-2xl'
+              >
+                {link.linkName}
+              </Link>
+            ))}
+
+            <div className='flex items-center justify-between'>
+              {isLoggedIn ? (
+                <div className='flex items-center space-x-2 text-xl text-black dark:text-white p-3'>
+                  <UserButton />
+                  <h1 className='tracking-tighter'>{user?.fullName}</h1>
+                </div>
+              ) : (
+                <div className='space-x-4 text-black'>
+                  <Button style={{ width: '6rem' }}>
+                    <Link href='/sign-in'>Sign In &rarr;</Link>
+                  </Button>
+                  <Button style={{ width: '6rem' }}>
+                    <Link href='/sign-up'>Sign Up &rarr;</Link>
+                  </Button>
+                </div>
+              )}
+
+              <ModeToggle />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
+    </nav>
   );
 };
 
