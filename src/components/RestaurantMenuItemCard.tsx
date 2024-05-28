@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image';
 import { useState } from 'react';
 
 const RestaurantMenuItemCard = ({ menuItem }:{menuItem:any}) => {
@@ -22,7 +23,7 @@ const RestaurantMenuItemCard = ({ menuItem }:{menuItem:any}) => {
 
   return (
     <div className='bg-white rounded-lg shadow-md p-6'>
-      <img
+      <Image
         src={menuItem.image}
         alt={menuItem.name}
         className='w-full h-40 object-cover rounded-md mb-4'

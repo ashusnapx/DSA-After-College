@@ -10,7 +10,7 @@ const Page = ({ params }: { params: any }) => {
 
   useEffect(() => {
     fetchMenuData();
-  }, [id]);
+  });
 
   const fetchMenuData = async () => {
     try {
